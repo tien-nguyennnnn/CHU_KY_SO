@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Nhận File</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <nav class="bg-blue-600 text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="{{ url_for('send_file') }}" class="text-xl font-bold">Hệ Thống Chia Sẻ File</a>
+            <div>
+                <a href="{{ url_for('send_file') }}" class="px-4 hover:underline">Gửi File</a>
+                <a href="{{ url_for('receive_file') }}" class="px-4 hover:underline">Nhận File</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg">
+        <h1 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Danh Sách File</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="p-4 rounded-md mb-4 text-center {{ 'bg-green-100 text-green-800' if category == 'success' else 'bg-red-100 text-red-800' }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% if files %}
+            <ul class="space-y-4">
+                {% for f in files %}
+                    <li class="flex justify-between items-center p-4 bg-gray-50 rounded-md">
+                        <span class="text-gray-700">{{ f }}</span>
+                        <div class="space-x-2">
+                            <a href="{{ url_for('download', filename=f) }}" class="text-blue-600 hover:underline">Tải về</a>
+                            <a href="{{ url_for('verify', filename=f) }}" class="text-green-600 hover:underline">Xác minh chữ ký</a>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-center text-gray-600">Không có file nào được gửi.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
